@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "deploy": "npm run build && netlify deploy --prod --dir=dist",
     "preview": "vite preview",
     "api": "node server.mjs",
     "start": "node server.mjs"
