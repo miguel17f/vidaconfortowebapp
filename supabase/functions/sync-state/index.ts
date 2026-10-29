@@ -57,8 +57,8 @@ Deno.serve(async (request) => {
       employees: current?.employees || [],
       services: current?.services || [],
       company_settings: current?.company_settings || {},
-      reports: incoming.reports.filter((item) => isMine(item as Record<string, unknown>)),
-      time_entries: incoming.time_entries.filter((item) => isMine(item as Record<string, unknown>)),
+      reports: [...arrayOr(current?.reports).filter((item) => !isMine(item as Record<string, unknown>)), ...incoming.reports.filter((item) => isMine(item as Record<string, unknown>))],
+      time_entries: [...arrayOr(current?.time_entries).filter((item) => !isMine(item as Record<string, unknown>)), ...incoming.time_entries.filter((item) => isMine(item as Record<string, unknown>))],
       employee_profile: { ...(current?.employee_profile || {}), [user.id]: { ...incoming.employee_profile, name: callerName, email: user.email || callerEmail } },
     };
 
