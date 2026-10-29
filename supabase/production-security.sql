@@ -17,6 +17,8 @@ alter table public.profiles add column if not exists role text default 'employee
 alter table public.profiles add column if not exists created_at timestamptz default now();
 alter table public.profiles add column if not exists updated_at timestamptz default now();
 
+alter table public.app_state add column if not exists notifications jsonb not null default '[]'::jsonb;
+
 update public.profiles p
 set email = u.email,
     name = coalesce(nullif(p.name, ''), u.raw_user_meta_data->>'name', split_part(u.email, '@', 1)),

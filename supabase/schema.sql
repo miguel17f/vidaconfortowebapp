@@ -8,6 +8,7 @@ create table if not exists public.app_state (
   services jsonb not null default '[]'::jsonb,
   reports jsonb not null default '[]'::jsonb,
   time_entries jsonb not null default '[]'::jsonb,
+  notifications jsonb not null default '[]'::jsonb,
   company_settings jsonb not null default '{}'::jsonb,
   employee_profile jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now()
@@ -15,6 +16,7 @@ create table if not exists public.app_state (
 
 alter table public.app_state add column if not exists company_settings jsonb not null default '{}'::jsonb;
 alter table public.app_state add column if not exists employee_profile jsonb not null default '{}'::jsonb;
+alter table public.app_state add column if not exists notifications jsonb not null default '[]'::jsonb;
 
 alter table public.app_state enable row level security;
 

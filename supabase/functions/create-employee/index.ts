@@ -36,6 +36,11 @@ Deno.serve(async (request) => {
     const { email, password, name, role = "employee", update = false, delete: deleteUser = false, user_id } = await request.json();
     const safeRole = role === "admin" ? "admin" : "employee";
     if (deleteUser && user_id) {
+      const { data: targetProfile } = await adminClient.from("profiles").select("role").eq("id", user_id).maybeSingle();
+      if (targetProfile?.role === "admin") {
+        const { count } = await adminClient.from("profiles").select("id", { count: "exact", head: true }).eq("role", "admin");
+        if ((count || 0) <= 1) return new Response(JSON.stringify({ error: "Não é possível eliminar o último administrador." }), { status: 409, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
       const { error } = await adminClient.auth.admin.deleteUser(user_id);
       if (error) throw error;
       return new Response(JSON.stringify({ deleted: true }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
@@ -52,6 +57,7 @@ Deno.serve(async (request) => {
       };
       const { data, error } = await adminClient.auth.admin.updateUserById(user_id, updatePayload);
       if (error) throw error;
+      await adminClient.from("profiles").upsert({ id: user_id, email, name, role: safeRole, updated_at: new Date().toISOString() });
       return new Response(JSON.stringify({ user: data.user }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
@@ -62,6 +68,8 @@ Deno.serve(async (request) => {
       user_metadata: { name, role: safeRole },
     });
     if (error) throw error;
+
+    await adminClient.from("profiles").upsert({ id: data.user.id, email, name, role: safeRole, updated_at: new Date().toISOString() });
 
     return new Response(JSON.stringify({ user: data.user }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (error) {

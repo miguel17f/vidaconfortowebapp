@@ -43,12 +43,13 @@ Deno.serve(async (request) => {
       services: arrayOr(body.services, current?.services || []),
       reports: arrayOr(body.reports, current?.reports || []),
       time_entries: arrayOr(body.time_entries, current?.time_entries || []),
+      notifications: arrayOr(body.notifications, current?.notifications || []),
       company_settings: objectOr(body.company_settings, current?.company_settings || {}),
       employee_profile: objectOr(body.employee_profile, current?.employee_profile || {}),
     };
 
     const isMine = (item: Record<string, unknown>) => {
-      const employee = String(item.employee || item.name || "").toLowerCase();
+      const employee = String(item.employee || item.name || item.recipientName || "").toLowerCase();
       return employee === callerName.toLowerCase() || (!!callerEmail && employee === callerEmail);
     };
 
@@ -59,6 +60,10 @@ Deno.serve(async (request) => {
       company_settings: current?.company_settings || {},
       reports: [...arrayOr(current?.reports).filter((item) => !isMine(item as Record<string, unknown>)), ...incoming.reports.filter((item) => isMine(item as Record<string, unknown>))],
       time_entries: [...arrayOr(current?.time_entries).filter((item) => !isMine(item as Record<string, unknown>)), ...incoming.time_entries.filter((item) => isMine(item as Record<string, unknown>))],
+      notifications: [...arrayOr(current?.notifications).filter((item) => {
+        const notification = item as Record<string, unknown>;
+        return notification.audience === "admin" || !isMine(notification);
+      }), ...incoming.notifications.filter((item) => isMine(item as Record<string, unknown>))],
       employee_profile: { ...(current?.employee_profile || {}), [user.id]: { ...incoming.employee_profile, name: callerName, email: user.email || callerEmail } },
     };
 
