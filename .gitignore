@@ -7,3 +7,6 @@ data/
 .vercel/
 .DS_Store
 *.log
+
+# Local Netlify folder
+.netlify

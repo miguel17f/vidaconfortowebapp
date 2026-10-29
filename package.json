@@ -11,12 +11,14 @@
     "start": "node server.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.118.0",
     "@vitejs/plugin-react": "latest",
-    "vite": "latest",
-    "typescript": "latest",
+    "lucide-react": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "lucide-react": "latest"
-  },
-  "devDependencies": {}
+    "read-excel-file": "^9.3.14",
+    "typescript": "latest",
+    "vite": "latest",
+    "write-excel-file": "^4.1.1"
+  }
 }

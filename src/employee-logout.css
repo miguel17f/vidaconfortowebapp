@@ -1,1 +1,8 @@
 .employee-top .profile{cursor:pointer}.employee-top .employee-logout{display:none}.employee-profile-menu button{display:flex;align-items:center;gap:7px}.logout-menu-icon{font-size:15px;color:#a15d52}
+.employee-top button.employee-logout {
+  display: none;
+}
+
+button.employee-logout::after {
+  content: none;
+}
