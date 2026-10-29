@@ -1,0 +1,5 @@
+.selected-address{display:flex;align-items:center;gap:4px;color:#628071;font-size:10px;font-weight:400;margin-top:2px}.selected-address svg{flex:none}
+
+/* A morada pertence à ficha do cliente e não é editada no formulário do serviço. */
+.selected-address,
+.modal label:has(input[readonly]){display:none}
