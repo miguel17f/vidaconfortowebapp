@@ -10,3 +10,4 @@ data/
 
 # Local Netlify folder
 .netlify
+supabase/.temp/
